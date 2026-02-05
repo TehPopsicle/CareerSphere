@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins';
+}
+body{
+    background: #0e0e0e;
+}
+.vanta-bg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none; 
+}
+.hero, .services{
+    position: relative;
+    z-index: 1;
+}
+.hero{
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+.get-started{
+    text-align: center;
+    padding-top: 80px;
+}
+.get-started-btn{
+    margin-left: auto;
+    margin-right: auto;
+    background: #00000000;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    border: #fff 3px solid;
+    transition: all ease-in-out 0.5s;
+    backdrop-filter: blur(3px);
+}
+.get-started-btn:hover{
+    background: #ffffff20;
+    backdrop-filter: blur(0);
+    font-weight: 700;
+}
+h1{
+    font-family: 'Roboto';
+    color: #fff;
+    padding-top: 50vh;
+    padding-left: 10vh;
+    font-size: 80px;
+    font-weight: 600;
+}
+h1 span{
+    color: #9b51ad;
+    font-family: 'Roboto';
+}
+.hero p{
+    font-family: 'Poppins';
+    color: #ffffffc5;
+    padding-left: 11vh;
+    font-size: 24px;
+    font-weight: 400;
+}
+.services{
+    color: #fff;
+    text-align: center;
+    padding-top: 50px;
+}
+.service-card-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  overflow-x: auto;
+  justify-content: center;
+}
+.service-card{
+    flex: 0 0 200px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    height: 300px;
+    width: 200px;
+    margin: 20px; 
+    color: #fff;
+    border-radius: 15px;
+    background: #ffffff15;
+    border: 2px #ffffff48 solid;
+    display: inline-block;
+    transition: all ease-in-out 250ms;
+}
+.service-card:hover{
+    transform: scale(1.05);
+}
+
+.service-card h3{
+    font-weight: 600;
+}
+
+
+
