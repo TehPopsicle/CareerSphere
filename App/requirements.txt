@@ -1,0 +1,81 @@
+import pandas as pd
+import os
+import time
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
+
+CLEAN_CSV = os.path.join(os.path.dirname(__file__), "..", "cleaned_jobs.csv")
+FINAL_CSV = os.path.join(os.path.dirname(__file__), "..", "analyzed_jobs.csv")
+
+def analyze_jobs():
+    df = pd.read_csv(CLEAN_CSV)
+
+    results = []
+    for idx, row in df.iterrows():
+        prompt = f"""
+You are a senior tech recruiter. Analyze this job for a candidate with skills in: Python, React, AWS, Docker, etc.
+
+Job: {row['job_title']} at {row['company']}
+Location: {row['location']}
+Type: {row['job_type']}, Level: {row['level']}
+
+Give:
+1. A match rating from 0-100 (INTEGER ONLY, no decimals)
+2. 2-3 sentence analysis
+
+Respond in JSON only:
+{{"rating": 87, "analysis": "Strong match due to..."}}
+"""
+
+        try:
+            response = client.chat.completions.create(
+                model="meta-llama/llama-3.2-3b-instruct:free",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=200
+            )
+            import json
+            content = response.choices[0].message.content.strip()
+            if content.startswith("```json"):
+                content = content[7:-3]
+            elif content.startswith("```"):
+                content = content[3:-3]
+            data = json.loads(content)
+            rating = int(data['rating']) if isinstance(data['rating'], (int, float)) else 50
+            rating = max(0, min(100, rating))  # Clamp
+
+            results.append({
+                "job_title": row['job_title'],
+                "company": row['company'],
+                "location": row['location'],
+                "job_type": row['job_type'],
+                "level": row['level'],
+                "link": row['link'],
+                "ai_rating": rating,
+                "ai_analysis": data['analysis']
+            })
+        except Exception as e:
+            results.append({
+                "job_title": row['job_title'],
+                "company": row['company'],
+                "location": row['location'],
+                "job_type": row['job_type'],
+                "level": row['level'],
+                "link": row['link'],
+                "ai_rating": 50,
+                "ai_analysis": "Analysis failed due to API error."
+            })
+
+        time.sleep(0.5)  # Be nice to free tier
+
+    # Save final
+    final_df = pd.DataFrame(results)
+    final_df.to_csv(FINAL_CSV, index=False)
+    return results
