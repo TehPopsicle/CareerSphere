@@ -2,13 +2,14 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from flask import Flask, send_from_directory, request, jsonify, send_file
 
 # LOAD .ENV FIRST
 from dotenv import load_dotenv
 env_path = Path(__file__).parent / '.env'
 load_dotenv(dotenv_path=env_path)
 
-from flask import Flask, send_from_directory, request, jsonify, send_file
+
 
 # Auto-install requirements
 def install_requirements():
